@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.TbOrderDetailDao">
+    <select id="getOne" parameterType="int" resultMap="Detail">
+        select * from (
+           select o.*,od.goodsId,od.goodsCount from tb_Order o join tb_orderdetail od on o.orderId=od.orderId 
+           <where>
+            o.orderId=#{id}
+           </where> 
+           )db
+         join tb_goods g on g.goodsId=db.goodsId 
+    </select>
+    <resultMap id="Detail" type="TbOrderDetail">
+        <result column="goodsCount" property="goodsCount"/>
+        <association property="order" javaType="TbOrder" autoMapping="true">
+          <id property="orderId" column="orderId"/>
+        </association>
+         <association property="goods" javaType="TbGoods" autoMapping="true">
+          <id property="goodsId" column="goodsId"/>
+        </association>
+    </resultMap>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.TbOrderDao">
+    <select id="getAll" resultType="TbOrder">
+       select * from tb_Order
+    </select>
+    <update id="pay" parameterType="int">
+      update tb_Order set orderState=0 where orderId=#{id}
+    </update>
+    <select id="ByCriteria" parameterType="java.util.Map" resultType="TbOrder">
+       select * from tb_Order
+       <where>
+           orderDate BETWEEN #{old} and #{ne}
+       </where>
+    </select>
+</mapper>

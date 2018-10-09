@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.dao.TbGoodsDao">
+  <!-- 商品录入 -->
+   <insert id="save" parameterType="TbGoods">
+      insert into tb_Goods(
+      goodsName,
+      typeId,
+      goodsUnitPrice,
+      goodsImageName,
+      goodsDate) 
+      values(
+         #{goodsName},
+         #{type.typeId},
+         #{goodsUnitPrice},
+         #{goodsImageName},
+         #{goodsDate}
+      )
+   </insert>
+   <!-- 商品查询 -->
+   <select id="getAll" resultMap="TbGoodsAndType">
+     select * from tb_Goods g join tb_Goods_Type gt on g.typeId=gt.typeId
+   </select>
+   <!-- 双表联合查询 -->
+   <resultMap type="TbGoods" id="TbGoodsAndType">
+         <id property="goodsId" column="goodsId"/>
+         <result property="goodsName" column="goodsName"/>
+         <result property="goodsUnitPrice" column="goodsUnitPrice"/>
+         <result property="goodsImageName" column="goodsImageName"/>
+         <result property="goodsDate" column="goodsDate"/>
+      <association property="type" javaType="TbGoodsType">
+         <id property="typeId " column="typeId "/>
+         <result property="typeName" column="typeName"/>
+      </association>
+   </resultMap>
+   <!-- 条件查询 -->
+   <select id="queryByCriteria" parameterType="java.util.Map" resultType="TbGoods">
+      select * from tb_Goods
+      <where>
+          goodsId=#{goodsId}
+      </where>
+   </select>
+<!-- 商品修改 -->
+   <update id="update" parameterType="TbGoods">
+      update  tb_Goods set 
+      <trim suffixOverrides=",">
+       <choose>
+         <when test="goodsName!=null">
+           goodsName=#{goodsName},
+         </when>
+          <when test="type.typeId!=null">
+           typeId=#{type.typeId},
+         </when>
+          <when test="goodsUnitPrice!=null">
+            goodsUnitPrice=#{goodsUnitPrice},
+         </when>
+          <when test="goodsImageName!=null">
+            goodsImageName=#{goodsImageName},
+         </when>
+         <when test="goodsDate!=null">
+            goodsDate=#{goodsDate}
+         </when>
+       </choose>
+       </trim>
+        <where>
+           goodsId=#{goodsId}
+        </where>
+   </update>
+ <!--   商品删除 -->
+   <delete id="del" parameterType="TbGoods">
+      delete from tb_Goods 
+        <where>
+           goodsId=#{goodsId}
+        </where>
+   </delete>
+</mapper>
